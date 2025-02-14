@@ -1,0 +1,37 @@
+<div class="shadow-lg px-4 py-6 bg-white h-full flex flex-col">
+    <!-- Book Cover -->
+    <div class="mb-2">
+      <img
+        [src]="book.cover"
+        class="w-full h-52 object-cover"
+        *ngIf="book.cover; else noImage"
+        alt="Book Cover"
+      />
+      <ng-template #noImage>
+        <img
+          src="../../../../assets/SingleBookImageTest.png"
+          class="w-full h-52 object-cover"
+          alt="Default Book Cover"
+        />
+      </ng-template>
+    </div>
+  
+    <!-- Book Details -->
+    <div class="flex-1">
+      <div>{{ book.price  }}</div>
+      <div class="font-bold">{{ book.title }}</div>
+      <div class="text-sm">{{ book.author.join(', ') }}</div>
+    </div>
+  
+    <!-- Check Book Button -->
+    <div class="mt-5 flex justify-evenly">
+      <button class="bg-OrangeButton text-sm font-bold mr-2 text-white py-1 px-2">
+        CHECK BOOK 
+      </button>
+      <!-- if book.available == true i want to hide this button -->
+      <button class="bg-OrangeButton text-sm font-bold text-white py-1 px-2" *ngIf="book.available">
+        Add
+      </button>
+    </div>
+  </div>
+  

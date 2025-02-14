@@ -1,0 +1,4 @@
+<app-search-and-filter (filtersChanged)="applyFilters($event)"> </app-search-and-filter>
+<div class="grid grid-cols-5 justify-center gap-10 p-4 px-32">
+  <app-bookcard *ngFor="let book of filteredBooks" [book]="book"></app-bookcard>
+</div>

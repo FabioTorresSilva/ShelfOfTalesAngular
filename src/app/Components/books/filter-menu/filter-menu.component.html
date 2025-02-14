@@ -1,0 +1,21 @@
+<div class="filter-menu-container">
+  <h3>Filter By</h3>
+
+  <!-- Category Filter -->
+  <div class="filter-options">
+    <label for="category">Category</label>
+    <select id="category" class="filter-select" [(ngModel)]="selectedCategory" (change)="applyFilters()">
+      <option value="">All</option>
+      <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+    </select>
+  </div>
+
+  <!-- Price Range Filter -->
+  <div class="filter-options">
+    <label for="price-range">Price Range</label>
+    <select id="price-range" class="filter-select" [(ngModel)]="selectedPriceRange" (change)="applyFilters()">
+      <option value="">All</option>
+      <option *ngFor="let price of priceRanges" [value]="price">{{ price }}</option>
+    </select>
+  </div>
+</div>
