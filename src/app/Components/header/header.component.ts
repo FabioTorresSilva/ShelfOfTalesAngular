@@ -18,40 +18,40 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private routerSubscription!: Subscription;
   private authSubscription!: Subscription;
   showDropdown: boolean = false;
-  userInfo: User | null = null;
+  userInfo: User | null = null;  // Store user info
 
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    // ✅ Debug: Log current route
+    // Log current route
     this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        console.log('Current route:', this.router.url);  // Debugging
-        this.isHomePage = this.router.url === '/' || this.router.url === ''; // ✅ Ensure correct detection
+        this.isHomePage = this.router.url === '/' || this.router.url === '';
       }
     });
 
-    // ✅ Track login status
+    // Track login status and store user information
     this.authSubscription = this.authService.user.subscribe((user) => {
       this.isUserLoggedIn = !!user;
-      this.userInfo = user; 
+      this.userInfo = user;  // Store the user info
     });
   }
 
   ngOnDestroy(): void {
+    // Unsubscribe from router and auth service subscriptions
     this.routerSubscription?.unsubscribe();
     this.authSubscription?.unsubscribe();
   }
 
   toggleDropdown(): void {
-    this.showDropdown = !this.showDropdown; // Toggle dropdown visibility
+    this.showDropdown = !this.showDropdown;  // Toggle dropdown visibility
   }
 
   logout(): void {
     this.authService.logout();
     this.isUserLoggedIn = false;
     this.showDropdown = false;
-    this.router.navigate(['/']); // Redirect to home after logout
-    window.location.reload();
+    this.router.navigate(['/']);  // Navigate to home page after logout
+    window.location.reload();  // Refresh the page to reset the state
   }
 }

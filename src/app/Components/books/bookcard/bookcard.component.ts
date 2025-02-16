@@ -1,5 +1,6 @@
 import { CommonModule, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bookcard',
@@ -11,5 +12,10 @@ import { Component, Input } from '@angular/core';
 export class BookCardComponent {
   @Input() book: any;  
 
-  
+  constructor(private router: Router) {}
+
+  checkBook(isbn: string): void {
+    this.router.navigate(['/book', isbn]);
+  }
 }
+

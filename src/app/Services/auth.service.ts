@@ -9,7 +9,7 @@ import { environment } from '../../environments/environement';
   providedIn: 'root'
 })
 export class AuthService {
-  private endpoint = `${environment.apiBaseUrl}/user/`;  // Correct API endpoint for user actions
+  private endpoint = `${environment.apiBaseUrl}/user/`;  
   private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   public user: Observable<User | null> = this.userSubject.asObservable();
 
@@ -22,40 +22,31 @@ export class AuthService {
 
   // Fetch user info and ensure the token is sent in the request headers
   fetchUserInfo(): void {
-    const token = this.tokenService.getToken('user_token'); // Retrieve the token
-    if (token) {
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`  // Add token to request headers
-      });
-  
-      this.http.get<User>(this.endpoint, { headers }).subscribe({
-        next: (user) => {
-          this.userSubject.next(user);
-        },
-        error: (err) => {
-          console.error('Error fetching user info:', err);
-        }
-      });
-    }
+    this.http.get<User>(this.endpoint).subscribe({
+      next: (user) => {
+        console.log('User info:', user); 
+        this.userSubject.next(user);
+      },
+      error: (err) => {
+        console.error('Error fetching user info:', err);
+      }
+    });
   }
   
-
   // Login method: Makes a POST request to login the user and handle the response
   login(email: string, password: string): Observable<User> {
     return this.http.post<any>(`${this.endpoint}signin`, { email, password }).pipe(
       map((response) => {
-        // Store only the token
         const token = response.token;
-        this.tokenService.saveToken('user_token', token);  // Store token
-        this.userSubject.next(response);  // Optionally store user details in the subject
+        this.tokenService.saveToken('user_token', token);
+        this.userSubject.next(response);  // Optionally store user details
+        this.fetchUserInfo();  // Fetch user info from backend after login
         return response;
       }),
       catchError(this.handleError<User>('login'))
     );
   }
   
-  
-
   // Logout method: Deletes the user token and updates the current user state
   logout(): void {
     this.tokenService.deleteToken('user_token');

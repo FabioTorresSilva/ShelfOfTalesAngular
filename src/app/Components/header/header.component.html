@@ -15,11 +15,12 @@
 
             <!-- Dropdown Content (Hidden by Default) -->
             <div *ngIf="showDropdown" class="absolute top-12 right-0 bg-white shadow-lg rounded-lg p-4 w-48">
-                <p class="text-black font-bold">Hello!</p>
+                <p class="text-black font-bold">Hello, {{ userInfo?.name || 'User' }}!</p> <!-- Display User Name -->
+                <p class="text-black">Role: {{ userInfo?.role || 'Guest' }}</p> <!-- Display User Role -->
                 <button (click)="logout()" class="mt-2 bg-OrangeButton text-white px-4 py-2 rounded">
-                    Logout
+                  Logout
                 </button>
-            </div>
+              </div>
         </div>
     </div>
 

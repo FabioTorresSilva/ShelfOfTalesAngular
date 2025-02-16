@@ -25,9 +25,10 @@
   
     <!-- Check Book Button -->
     <div class="mt-5 flex justify-evenly">
-      <button class="bg-OrangeButton text-sm font-bold mr-2 text-white py-1 px-2">
-        CHECK BOOK 
-      </button>
+      <button (click)="checkBook(book.isbn)"
+            class="bg-OrangeButton text-sm font-bold mr-2 text-white py-1 px-2">
+      CHECK BOOK
+    </button>
       <!-- if book.available == true i want to hide this button -->
       <button class="bg-OrangeButton text-sm font-bold text-white py-1 px-2" *ngIf="book.available">
         Add
