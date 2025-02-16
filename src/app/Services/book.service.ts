@@ -25,6 +25,10 @@ export class BookService {
     );
   }
 
+  getUnavailableBooks(): Observable<Book[]> {
+    return this.http.get<Book[]>(`${environment.apiBaseUrl}/book/unavailable`);
+  }
+
   getReviewsByIsbn(isbn: string): Observable<Review[]> {
     return this.http.get<Review[]>(`${environment.apiBaseUrl}/review/${isbn}`).pipe(
       

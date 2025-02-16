@@ -32,6 +32,12 @@ export class AuthService {
       }
     });
   }
+
+   isManager(): boolean {
+    // Ensure the userSubject has a value before checking role
+    const user = this.userSubject.value;
+    return user ? user.role === 'manager' : false;
+  }
   
   // Login method: Makes a POST request to login the user and handle the response
   login(email: string, password: string): Observable<User> {
