@@ -31,7 +31,7 @@ export class BookDetailsComponent implements OnInit {
             this.books = data;
             this.filteredBooks = data;  
           },
-       
+          error: (err) => console.error('Error fetching unavailable books:', err)
         });
       } else {
         // If the user is not a manager, fetch available books
@@ -70,5 +70,11 @@ export class BookDetailsComponent implements OnInit {
   private matchPriceRange(bookPrice: number, selectedRange: string): boolean {
     const [min, max] = selectedRange.split('-').map(val => (val === '+' ? Infinity : Number(val)));
     return bookPrice >= min && bookPrice <= max;
+  }
+
+  // Method to handle the event from BookCardComponent to update the filteredBooks array
+  onBookStatusChanged(isbn: string): void {
+    // Remove the book optimistically
+    this.filteredBooks = this.filteredBooks.filter(book => book.isbn !== isbn);
   }
 }

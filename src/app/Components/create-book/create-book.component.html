@@ -1,0 +1,62 @@
+<div class="px-10 py-8">
+    <h2 class="text-2xl font-bold mb-4">Create a New Book</h2>
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label for="isbn" class="block text-sm font-medium">ISBN</label>
+        <input id="isbn" formControlName="isbn" class="w-full p-2 border rounded" />
+        <div *ngIf="bookForm.get('isbn')?.invalid && bookForm.get('isbn')?.touched" class="text-red-500 text-xs">
+          ISBN is required and must be 13 digits long.
+        </div>
+      </div>
+  
+      <div class="mb-4">
+        <label for="title" class="block text-sm font-medium">Title</label>
+        <input id="title" formControlName="title" class="w-full p-2 border rounded" />
+        <div *ngIf="bookForm.get('title')?.invalid && bookForm.get('title')?.touched" class="text-red-500 text-xs">
+          Title is required.
+        </div>
+      </div>
+  
+      <div class="mb-4">
+        <label class="block text-sm font-medium">Authors</label>
+        <div formArrayName="authors">
+          <div *ngFor="let author of authors.controls; let i = index">
+            <input [formControlName]="i" class="w-full p-2 border rounded mb-2" placeholder="Author Name" />
+            <button type="button" (click)="removeAuthor(i)" *ngIf="authors.length > 1">Remove</button>
+          </div>
+        </div>
+        <button type="button" (click)="addAuthor()" class="bg-blue-500 text-white p-2 rounded mt-2">
+          Add Author
+        </button>
+      </div>
+  
+      <div class="mb-4">
+        <label for="category" class="block text-sm font-medium">Category</label>
+        <input id="category" formControlName="category" class="w-full p-2 border rounded" />
+        <div *ngIf="bookForm.get('category')?.invalid && bookForm.get('category')?.touched" class="text-red-500 text-xs">
+          Category is required.
+        </div>
+      </div>
+  
+      <div class="mb-4">
+        <label for="cover" class="block text-sm font-medium">Cover Image URL</label>
+        <input id="cover" formControlName="cover" class="w-full p-2 border rounded" />
+        <div *ngIf="bookForm.get('cover')?.invalid && bookForm.get('cover')?.touched" class="text-red-500 text-xs">
+          Cover image URL is required.
+        </div>
+      </div>
+  
+      <div class="mb-4">
+        <label for="price" class="block text-sm font-medium">Price</label>
+        <input id="price" formControlName="price" type="number" class="w-full p-2 border rounded" />
+        <div *ngIf="bookForm.get('price')?.invalid && bookForm.get('price')?.touched" class="text-red-500 text-xs">
+          Price is required and must be a positive number.
+        </div>
+      </div>
+  
+      <button type="submit" [disabled]="bookForm.invalid" class="bg-blue-500 text-white p-2 rounded">
+        Create Book
+      </button>
+    </form>
+  </div>
+  

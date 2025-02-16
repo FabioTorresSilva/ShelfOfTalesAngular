@@ -1,10 +1,10 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http'; // Import HttpClient
 import { AuthService } from '../../../Services/auth.service'; // Import AuthService
 import { environment } from '../../../../environments/environement'; // Import your environment
-import { BookService } from '../../../Services/book.service';
+import { BookService } from '../../../Services/book.service'; // Import BookService
 
 @Component({
   selector: 'app-bookcard',
@@ -15,13 +15,13 @@ import { BookService } from '../../../Services/book.service';
 })
 export class BookCardComponent {
   @Input() book: any;
-  @Output() bookChanged = new EventEmitter<string>();  
+  @Output() bookStatusChanged = new EventEmitter<any>();  // Output event to notify parent
 
   constructor(
     private router: Router,
     private http: HttpClient, 
-    public authService: AuthService ,
-    private bookService: BookService
+    public authService: AuthService,
+    private bookService: BookService // Inject BookService
   ) {}
 
   checkBook(isbn: string): void {
@@ -30,30 +30,38 @@ export class BookCardComponent {
 
   changeBookAvailability(isbn: string): void {
     if (this.authService.isManager()) {  // Check if the user is a manager
+      // Optimistic UI update: Remove the book from the list immediately
+      this.removeBookOptimistically(isbn);
+
+      // Now make the API call
       const url = `${environment.apiBaseUrl}/book/${isbn}/availability`;
-      console.log(url);
-
-      // Optimistic update: Assume success and immediately hide the book
-      const previousAvailability = this.book.available;
-      this.book.available = true;  // Assume the book will be available after the API call
-
-      // Remove the book from the UI list optimistically
-      this.bookChanged.emit(isbn);
-
-      // Make the HTTP request to change the availability
       this.http.patch(url, {}).subscribe({
         next: (response) => {
           console.log('Book availability changed:', response);
+          this.book.available = true;  // Update the book's availability status locally
+          this.bookStatusChanged.emit(isbn);  // Emit event to parent to notify that the book availability changed
         },
         error: (err) => {
-          // Rollback if the API call fails
           console.error('Error changing book availability:', err);
-          this.book.available = previousAvailability;  // Restore previous availability
-          // Optionally show an error message to the user
+          // If the request fails, restore the book in the list
+          this.restoreBook(isbn);
         }
       });
     } else {
       console.error('Only managers can change book availability');
     }
+  }
+
+  // Optimistically remove the book from filteredBooks
+  private removeBookOptimistically(isbn: string): void {
+    // Emit the removal of the book to the parent component
+    this.bookStatusChanged.emit(isbn);
+  }
+
+  // Restore the book if the update failed
+  private restoreBook(isbn: string): void {
+    this.bookService.getBookByIsbn(isbn).subscribe((restoredBook) => {
+      this.bookStatusChanged.emit(isbn);
+    });
   }
 }

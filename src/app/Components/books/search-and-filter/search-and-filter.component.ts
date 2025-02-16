@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { FilterMenuComponent } from '../filter-menu/filter-menu.component';
 import { AuthService } from '../../../Services/auth.service'; // Inject AuthService
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-search-and-filter',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchBarComponent, FilterMenuComponent],
+  imports: [CommonModule, FormsModule, SearchBarComponent, FilterMenuComponent, RouterModule],
   templateUrl: './search-and-filter.component.html',
   styleUrls: ['./search-and-filter.component.css']
 })

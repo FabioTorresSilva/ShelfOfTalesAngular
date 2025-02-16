@@ -25,6 +25,18 @@ export class BookService {
     );
   }
 
+  createBook(bookData: any): Observable<any> {
+    const token = localStorage.getItem('token'); // Get the token from localStorage (adjust as necessary)
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(`${environment.apiBaseUrl}/book`, bookData, { headers });
+  }
+
+
   getUnavailableBooks(): Observable<Book[]> {
     return this.http.get<Book[]>(`${environment.apiBaseUrl}/book/unavailable`);
   }
