@@ -24,6 +24,10 @@ export class BookService {
 
     );
   }
+  updateBook(isbn: string, updatedBook: Book): Observable<Book> {
+    return this.http.put<Book>(`${environment.apiBaseUrl}/book/${isbn}`, updatedBook);
+  }
+
 
   createBook(bookData: any): Observable<any> {
     const token = localStorage.getItem('token'); // Get the token from localStorage (adjust as necessary)
@@ -55,6 +59,10 @@ export class BookService {
 
   addReview(review: { isbn: string; review: string }) {
     return this.http.post(`${environment.apiBaseUrl}/review`, review);
+  }
+
+  deleteBook(isbn: string): Observable<Book> {
+    return this.http.delete<Book>(`${environment.apiBaseUrl}/book/${isbn}`);
   }
 }
 

@@ -1,0 +1,38 @@
+<div class="max-w-xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <h2 class="text-2xl font-bold text-center mb-4">Update Book</h2>
+  
+    <form [formGroup]="updateBookForm" (ngSubmit)="submitUpdate()">
+      <div class="mb-4">
+        <label for="isbn" class="block text-sm font-semibold">ISBN</label>
+        <input id="isbn" formControlName="isbn" class="w-full p-2 border rounded-lg" readonly />
+      </div>
+  
+      <div class="mb-4">
+        <label for="title" class="block text-sm font-semibold">Title</label>
+        <input id="title" formControlName="title" class="w-full p-2 border rounded-lg" />
+      </div>
+  
+      <div class="mb-4">
+        <label for="author" class="block text-sm font-semibold">Author(s)</label>
+        <input id="author" formControlName="author" class="w-full p-2 border rounded-lg" />
+      </div>
+  
+      <div class="mb-4">
+        <label for="cover" class="block text-sm font-semibold">Cover Image URL</label>
+        <input id="cover" formControlName="cover" class="w-full p-2 border rounded-lg" />
+      </div>
+  
+      <div class="mb-4">
+        <label for="price" class="block text-sm font-semibold">Price</label>
+        <input id="price" formControlName="price" type="number" class="w-full p-2 border rounded-lg" />
+      </div>
+  
+      <div *ngIf="errorMessage" class="text-red-500 mb-4">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="text-green-500 mb-4">{{ successMessage }}</div>
+  
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" [disabled]="updateBookForm.invalid">
+        Update Book
+      </button>
+    </form>
+  </div>
+  

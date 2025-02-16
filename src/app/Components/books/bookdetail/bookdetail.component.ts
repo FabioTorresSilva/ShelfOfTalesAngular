@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Book } from '../../../Models/book';
@@ -19,6 +19,7 @@ export class BookDetailComponent implements OnInit {
   reviews: Review[] = [];
   isbn: string | null = null;
   isLoggedIn: boolean = false;
+  isManager: boolean = false;  // Track if the logged-in user is a manager
   showReviewForm: boolean = false;
   reviewForm: FormGroup;
   successMessage: string | null = null;
@@ -28,7 +29,8 @@ export class BookDetailComponent implements OnInit {
     private route: ActivatedRoute, 
     private bookService: BookService,
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
   ) {
     this.reviewForm = this.fb.group({
       review: ['', [Validators.required, Validators.minLength(5)]]
@@ -38,6 +40,7 @@ export class BookDetailComponent implements OnInit {
   ngOnInit(): void {
     this.authService.user.subscribe(user => {
       this.isLoggedIn = !!user;
+      this.isManager = this.authService.isManager();  // Get manager status from AuthService
     });
 
     this.isbn = this.route.snapshot.paramMap.get('isbn');
@@ -85,4 +88,28 @@ export class BookDetailComponent implements OnInit {
       });
     }
   }
+
+  navigateToUpdateBook(isbn: string): void {
+    this.router.navigate(['/update/book', isbn]);
+  }
+
+  // Delete the book
+  deleteBook(): void {
+    if (this.book && confirm('Are you sure you want to delete this book?')) {
+      this.bookService.deleteBook(this.book.isbn).subscribe({
+        next: () => {
+          this.successMessage = 'Book deleted successfully!';
+          this.errorMessage = null;
+          this.router.navigate(['/']);  // Corrected Router usage
+        },
+        error: () => {
+          this.successMessage = null;
+          this.errorMessage = 'Failed to delete the book. Please try again.';
+        }
+      });
+    }
+  }
+  
+
+
 }
